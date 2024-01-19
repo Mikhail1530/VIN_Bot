@@ -33,6 +33,7 @@ const start = () => {
     ])
     bot.onText(/(.+)/, async (msg, match) => {
         if (match[0] == '/id' && authenticate_users(msg.from.id)) {
+
             await bot.sendMessage(msg.chat.id, 'Ваш ID: ' + msg.from.id, KEYBOARD)
         }
         if (match[0] == '/VIN' && authenticate_users(msg.from.id)) {
@@ -83,42 +84,5 @@ const start = () => {
     }
 }
 start()
-// bot.on('message', async msg => {
-//     const text = msg.text
-//     const chatId = msg.chat.id
-//
-//     if (text === '/start') {
-//         await bot.sendMessage(chatId,
-//             "1. Чтобы получить пправа доступа нужно ввести правильный пароль " +
-//             "2. Чтобы удалить пользователя нужно написать delete " +
-//             "3. Чтобы запросить информацию по авто надо ввести VIN-номер (для тех кто аторизован)")
-//     }
-//     if (text === '/info') {
-//         await bot.sendMessage(chatId, JSON.stringify(listUsersUsed),KEYBOARD)
-//     }
-//     if (text === 'podberu') {
-//         authUsersId.push(msg.from.id)
-//         // console.log(authArray[0])
-//         // console.log(msg.from.id)
-//
-//         await bot.sendPhoto(chatId, 'https://static.tildacdn.com/tild3465-6435-4365-a633-373234323630/01_1.png');
-//         await bot.sendMessage(chatId, 'Теперь у вас есть права доступа')
-//
-//         const url = `report?vin=${text}&format=pdf&reportTemplate=2021`
-//
-//     }
-//     if (text.length === 17 && msg.from.id === authUsersId[0]) {
-//         //     тут текст из инпута отправляем на сервак + обработка ошибок
-//         // Зачистить массив authArray
-//         await bot.sendMessage(chatId, 'Скачать файл')
-//
-//     }
-//     if (text !== '/start' && text !== 'autopodberu' && !authUsersId.length) {
-//         await bot.sendMessage(chatId, 'Неверный пароль')
-//     }
-// if (text !== '/start') {
-//     const responsePdf = await instance.get(url)
-//     await bot.sendDocument(chatId, responsePdf)
-// }
-// })
+
 
