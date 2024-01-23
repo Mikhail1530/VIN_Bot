@@ -41,9 +41,9 @@ const start = () => {
         }
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-            const responsePdf = await instance.get(url).then(res => res)
+            const responsePdf = await instance.get(url).then(res => res.data)
             // добавить в промис обработку ошибок
-            console.log(responsePdf)
+            console.log(responsePdf.data)
             await bot.sendDocument(msg.chat.id, responsePdf)
             // await bot.sendMessage(msg.chat.id, 'Скачать файл')
             allRequests += 1
