@@ -41,7 +41,7 @@ const start = () => {
         }
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-            const responsePdf = await instance.get(url).then(res => res.data)
+            const responsePdf = await instance.get(url).then(res => res)
 
             console.log(JSON.stringify(responsePdf))
             // const fileOptions = {
