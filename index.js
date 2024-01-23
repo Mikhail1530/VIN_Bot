@@ -40,11 +40,11 @@ const start = () => {
             await bot.sendMessage(msg.chat.id, 'Введите VIN авто (17 символов)', KEYBOARD)
         }
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
-            const url = `report?vin=${msg.text}`
-            const responsePdf = await instance.get(url).then(res => res.result)
+            const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
+            const responsePdf = await instance.get(url).then(res => res)
             // добавить в промис обработку ошибок
-            await bot.sendMessage(msg.chat.id, JSON.stringify(responsePdf), KEYBOARD)
-            // await bot.sendDocument(msg.chat.id, responsePdf, KEYBOARD)
+            console.log(responsePdf)
+            await bot.sendDocument(msg.chat.id, responsePdf)
             // await bot.sendMessage(msg.chat.id, 'Скачать файл')
             allRequests += 1
             listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
