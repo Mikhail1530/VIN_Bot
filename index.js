@@ -1,7 +1,5 @@
 const TelegramApi = require('node-telegram-bot-api')
 const axios = require('axios')
-const fs = require('fs')
-const {request} = require("axios");
 
 const token = '6841869139:AAGsQ-6C3FJxfVPdfJko7Sa2evA0Hyz5Yy4'
 const bot = new TelegramApi(token, {polling: true})
@@ -43,14 +41,14 @@ const start = () => {
         }
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
+            const responsePdf = await instance.get(url).then(res => res.data)
 
-            // const responsePdf = await instance.get(url).then(res => res.data)
-
-            // const responsePdf = await instance.get(url).then(res => res.data)
-            const jsonPayload = JSON.stringify({document: fs.readFileSync(await instance.get(url).then(res => res.data)).toString('base64')})
-
-            console.log(JSON.stringify(jsonPayload))
-            // await bot.sendDocument(msg.chat.id, jsonPayload)
+            // console.log(JSON.stringify(responsePdf))
+            const fileOptions = {
+                filename: responsePdf,
+                contentType: 'application/pdf'
+            }
+            await bot.sendDocument(msg.chat.id, fileOptions)
 
 
             allRequests += 1
