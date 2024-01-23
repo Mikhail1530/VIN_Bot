@@ -41,7 +41,8 @@ const start = () => {
         }
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-            const responsePdf = await instance.get(url).then(res => res.data)
+
+            const responsePdf = open(await instance.get(url).then(res => res.data), 'rb')
             // добавить в промис обработку ошибок
             console.log(responsePdf.data)
             await bot.sendDocument(msg.chat.id, responsePdf)
@@ -67,9 +68,11 @@ const start = () => {
             await bot.sendMessage(msg.chat.id, `Пользователь удален`)
         }
         if (match[0] == '/info' && authenticate_users(msg.from.id)) {
-            await bot.sendMessage(msg.chat.id, Object.entries(listUsersUsed).map(el=>`\n<b>${el[0]}</b>: ${el[1]}`) + `\n<i>всего запросов: ${allRequests}</i>`, {parse_mode: 'HTML'})
+            await bot.sendMessage(msg.chat.id, Object.entries(listUsersUsed).map(el => `\n<b>${el[0]}</b>: ${el[1]}`) + `\n<i>всего запросов: ${allRequests}</i>`, {parse_mode: 'HTML'})
         }
-        if(allRequests !== 0 && (allRequests%240 === 0 || allRequests%245 === 0)) {await bot.sendMessage(msg.chat.id, `Осталось ${requestsPerMonth - allRequests} запросов`, KEYBOARD)}
+        if (allRequests !== 0 && (allRequests % 240 === 0 || allRequests % 245 === 0)) {
+            await bot.sendMessage(msg.chat.id, `Осталось ${requestsPerMonth - allRequests} запросов`, KEYBOARD)
+        }
         if (match[0] && !authenticate_users(msg.from.id)) {
             await bot.sendMessage(msg.chat.id, 'Вы не авторизованы, введите пароль')
         }
