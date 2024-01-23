@@ -4,7 +4,8 @@ const axios = require('axios')
 const token = '6841869139:AAGsQ-6C3FJxfVPdfJko7Sa2evA0Hyz5Yy4'
 const bot = new TelegramApi(token, {polling: true})
 
-const tokenVin = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6InRlc3QiLCJ1c2VyIjp7ImlkIjoyMDg1MTEsImVtYWlsIjoiYXV0b3BvZGJlcnUxKzFAZ21haWwuY29tIn0sInZlbmRvciI6eyJpZCI6MjczLCJzdGF0dXMiOiJhY3RpdmUiLCJpcCI6WyIxNzIuMjAuMTAuMyIsIjU0Ljg2LjUwLjEzOSJdfSwiaWF0IjoxNzA1NDA4NDUyLCJleHAiOjE3MDgwMDA0NTJ9.RxYd-tt-iPTeAf9ab-SFVVx9KMsrK8RblerLuJA5uho'
+const tokenVin = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6InRlc3QiLCJ1c2VyIjp7ImlkIjoyMDg1MTEsImVtYWlsIjoiYXV0b3BvZGJlcnUxKzFAZ21haWwuY29tIn0sInZlbmRvciI6eyJpZCI6MjczLCJzdGF0dXMiOiJhY3RpdmUiLCJpcCI6WyIxNzIuMjAuMTAuMyIsIjU0Ljg2LjUwLjEzOSIsIjE4NS4xMTUuNC4xNDciXX0sImlhdCI6MTcwNTY2NzU0MiwiZXhwIjoxNzA4MjU5NTQyfQ.cMju6E43N9aVkMbqipsKIRQKHPFlqs1A_bVIOU4WTak'
+// const tokenVin = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6InRlc3QiLCJ1c2VyIjp7ImlkIjoyMDg1MTEsImVtYWlsIjoiYXV0b3BvZGJlcnUxKzFAZ21haWwuY29tIn0sInZlbmRvciI6eyJpZCI6MjczLCJzdGF0dXMiOiJhY3RpdmUiLCJpcCI6WyIxNzIuMjAuMTAuMyIsIjU0Ljg2LjUwLjEzOSJdfSwiaWF0IjoxNzA1NDA4NDUyLCJleHAiOjE3MDgwMDA0NTJ9.RxYd-tt-iPTeAf9ab-SFVVx9KMsrK8RblerLuJA5uho'
 const instance = axios.create({
     baseURL: "https://www.clearvin.com/rest/vendor/",
     headers: {
@@ -12,7 +13,7 @@ const instance = axios.create({
     },
 });
 let authUsersId = []
-let listUsersUsed = {}
+let listUsersUsed = {'Danila': 3, 'Stepan': 3}
 let allRequests = 0
 const requestsPerMonth = 250
 
@@ -41,9 +42,9 @@ const start = () => {
         }
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-            // const responsePdf = await instance.get(url).then(res => res)
+            // const responsePdf = await instance.get(url)
             // добавить в промис обработку ошибок
-            // await bot.sendDocument(chatId, responsePdf, KEYBOARD)
+            // await bot.sendDocument(msg.chat.id, responsePdf, KEYBOARD)
             await bot.sendMessage(msg.chat.id, 'Скачать файл')
             allRequests += 1
             listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
@@ -66,7 +67,7 @@ const start = () => {
             await bot.sendMessage(msg.chat.id, `Пользователь удален`)
         }
         if (match[0] == '/info' && authenticate_users(msg.from.id)) {
-            await bot.sendMessage(msg.chat.id, JSON.stringify(listUsersUsed) + ` всего запросов: ${allRequests}`)
+            await bot.sendMessage(msg.chat.id, Object.entries(listUsersUsed).map(el=>`\n<b>${el[0]}</b>: ${el[1]}`) + `\n<i>всего запросов: ${allRequests}</i>`, {parse_mode: 'HTML'})
         }
         if(allRequests !== 0 && (allRequests%240 === 0 || allRequests%245 === 0)) {await bot.sendMessage(msg.chat.id, `Осталось ${requestsPerMonth - allRequests} запросов`, KEYBOARD)}
         if (match[0] && !authenticate_users(msg.from.id)) {
