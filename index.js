@@ -43,10 +43,10 @@ const start = () => {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
 
             // const responsePdf = await instance.get(url).then(res => res.data)
-            const responsePdf = await instance.get(url).then(res => res.data.data).catch(err => err? 'Error' : '')
+            const responsePdf = await instance.get(url).then(res => res.data).catch(err => err? 'Error' : '')
 
 
-            console.log(JSON.stringify(responsePdf.data.data))
+            // console.log(JSON.stringify(responsePdf.data))
             await bot.sendDocument(msg.chat.id, responsePdf)
             // await bot.sendMessage(msg.chat.id, 'Скачать файл')
             allRequests += 1
