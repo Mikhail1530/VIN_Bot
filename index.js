@@ -1,11 +1,11 @@
 const TelegramApi = require('node-telegram-bot-api')
 const axios = require('axios')
+import axios from "axios";
 
 const token = '6841869139:AAGsQ-6C3FJxfVPdfJko7Sa2evA0Hyz5Yy4'
 const bot = new TelegramApi(token, {polling: true})
 
 const tokenVin = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6InRlc3QiLCJ1c2VyIjp7ImlkIjoyMDg1MTEsImVtYWlsIjoiYXV0b3BvZGJlcnUxKzFAZ21haWwuY29tIn0sInZlbmRvciI6eyJpZCI6MjczLCJzdGF0dXMiOiJhY3RpdmUiLCJpcCI6WyIxNzIuMjAuMTAuMyIsIjU0Ljg2LjUwLjEzOSIsIjE4NS4xMTUuNC4xNDciXX0sImlhdCI6MTcwNTY2NzU0MiwiZXhwIjoxNzA4MjU5NTQyfQ.cMju6E43N9aVkMbqipsKIRQKHPFlqs1A_bVIOU4WTak'
-// const tokenVin = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6InRlc3QiLCJ1c2VyIjp7ImlkIjoyMDg1MTEsImVtYWlsIjoiYXV0b3BvZGJlcnUxKzFAZ21haWwuY29tIn0sInZlbmRvciI6eyJpZCI6MjczLCJzdGF0dXMiOiJhY3RpdmUiLCJpcCI6WyIxNzIuMjAuMTAuMyIsIjU0Ljg2LjUwLjEzOSJdfSwiaWF0IjoxNzA1NDA4NDUyLCJleHAiOjE3MDgwMDA0NTJ9.RxYd-tt-iPTeAf9ab-SFVVx9KMsrK8RblerLuJA5uho'
 const instance = axios.create({
     baseURL: "https://www.clearvin.com/rest/vendor/",
     headers: {
@@ -42,10 +42,10 @@ const start = () => {
         }
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-            // const responsePdf = await instance.get(url)
+            const responsePdf = await instance.get(url)
             // добавить в промис обработку ошибок
-            // await bot.sendDocument(msg.chat.id, responsePdf, KEYBOARD)
-            await bot.sendMessage(msg.chat.id, 'Скачать файл')
+            await bot.sendDocument(msg.chat.id, responsePdf, KEYBOARD)
+            // await bot.sendMessage(msg.chat.id, 'Скачать файл')
             allRequests += 1
             listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
         }
