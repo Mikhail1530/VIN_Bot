@@ -40,7 +40,7 @@ const start = () => {
             await bot.sendMessage(msg.chat.id, 'Введите VIN авто (17 символов)', KEYBOARD)
         }
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
-            const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
+            const url = `report?vin=${msg.text}`
             const responsePdf = await instance.get(url).then(res => res)
             // добавить в промис обработку ошибок
             await bot.sendDocument(msg.chat.id, responsePdf, KEYBOARD)
