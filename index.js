@@ -43,7 +43,7 @@ const start = () => {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
             const responsePdf = await instance.get(url).then(res => res)
 
-            console.log(JSON.stringify(responsePdf))
+            console.log(responsePdf)
             // const fileOptions = {
             //     filename: responsePdf,
             //     contentType: 'application/pdf'
