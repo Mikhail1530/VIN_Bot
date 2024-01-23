@@ -43,7 +43,8 @@ const start = () => {
             const url = `report?vin=${msg.text}`
             const responsePdf = await instance.get(url).then(res => res)
             // добавить в промис обработку ошибок
-            await bot.sendDocument(msg.chat.id, responsePdf, KEYBOARD)
+            await bot.sendMessage(msg.chat.id, JSON.stringify(responsePdf), KEYBOARD)
+            // await bot.sendDocument(msg.chat.id, responsePdf, KEYBOARD)
             // await bot.sendMessage(msg.chat.id, 'Скачать файл')
             allRequests += 1
             listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
