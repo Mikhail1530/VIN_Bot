@@ -43,7 +43,7 @@ const start = () => {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
 
             // const responsePdf = await instance.get(url).then(res => res.data)
-            const responsePdf = open(await instance.get(url), 'rb')
+            const responsePdf = await open(await instance.get(url), 'rb')
 
 
             console.log(JSON.stringify(responsePdf.data.data))
