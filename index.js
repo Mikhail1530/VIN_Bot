@@ -42,12 +42,11 @@ const start = () => {
         }
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-            // const url = `preview?vin=${msg.text}`
             const {data} = await instance.get(url)
             if (data) {
-                await fsPromises.writeFile('./file.pdf', data, {encoding: 'binary'});
-                await bot.sendDocument(msg.chat.id, './file.pdf', {}, {
-                    filename: 'file.pdf',
+                await fsPromises.writeFile(`./${msg.chat.id}file.pdf`, data, {encoding: 'binary'});
+                await bot.sendDocument(msg.chat.id, `./${msg.chat.id}file.pdf`, {}, {
+                    filename: `${msg.chat.id}file.pdf`,
                     contentType: 'application/pdf'
                 })
             }
