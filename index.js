@@ -34,7 +34,6 @@ const start = () => {
     ])
     bot.onText(/(.+)/, async (msg, match) => {
         if (match[0] == '/id' && authenticate_users(msg.from.id)) {
-
             await bot.sendMessage(msg.chat.id, 'Ваш ID: ' + msg.from.id, KEYBOARD)
         }
         if (match[0] == '/VIN' && authenticate_users(msg.from.id)) {
@@ -42,19 +41,20 @@ const start = () => {
         }
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-            const response = await instance.get(url)
-            // if (data) {
-            //     await fsPromises.writeFile(`./${msg.chat.id}file.pdf`, data, {encoding: 'binary'});
-            //     await bot.sendDocument(msg.chat.id, `./${msg.chat.id}file.pdf`, {}, {
-            //         filename: `${msg.chat.id}file.pdf`,
-            //         contentType: 'application/pdf'
-            //     })
-            // }
-            console.log(response)
+            try {
+                const {data} = await instance.get(url)
+                await fsPromises.writeFile(`./${msg.chat.id}file.pdf`, data, {encoding: 'binary'});
+                await bot.sendDocument(msg.chat.id, `./${msg.chat.id}file.pdf`, {}, {
+                    filename: `${msg.chat.id}file.pdf`,
+                    contentType: 'application/pdf'
+                })
+            } catch (e) {
+                await bot.sendMessage(msg.chat.id, 'Ошибка сервиса', KEYBOARD)
+            }
             allRequests += 1
             listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
         }
-        if (match[0] == 'podberu') {
+        if (match[0] == '001100') {
             authUsersId.push(msg.from.id)
             await bot.sendPhoto(msg.chat.id, './assets/cover.png')
             await bot.sendMessage(msg.chat.id, 'Теперь у вас есть права доступа', KEYBOARD)
@@ -67,8 +67,6 @@ const start = () => {
         }
         if (Number.isInteger(+msg.text) && authenticate_users(msg.from.id)) {
             authUsersId = authUsersId.filter(u => u !== +msg.text)
-            console.log(authUsersId)
-
             await bot.sendMessage(msg.chat.id, `Пользователь удален`)
         }
         if (match[0] == '/info' && authenticate_users(msg.from.id)) {
