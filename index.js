@@ -42,10 +42,11 @@ const start = () => {
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
             // const url = `preview?vin=${msg.text}`
-            const responsePdf = await instance.get(url).then(res => {
-                return res.data
-                // return URL.createObjectURL(blobFile)
-            })
+            const responsePdf = await instance.get(url).then(res => res.data).catch(err => throw new Error('Error'))
+            // {
+            //     const blobFile = res.data
+            //     return URL.createObjectURL(blobFile)
+            // })
             console.log(responsePdf)
             // await bot.sendDocument(msg.chat.id, responsePdf, {}, {
             //     filename: 'responsePdf.pdf',
