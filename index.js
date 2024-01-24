@@ -43,9 +43,12 @@ const start = () => {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
             // const url = `preview?vin=${msg.text}`
             // const responsePdf = await instance.get(url).then(res => res.data)
-            const responsePdf = await instance.get(url).then(res => res.data)
+            const responsePdf = await instance.get(url).then(res => {
+                const blobFile = res.data
+                return URL.createObjectURL(blobFile)
+            })
             await bot.sendDocument(msg.chat.id, responsePdf, {}, {
-                filename: 'responsePdf',
+                filename: 'responsePdf.pdf',
                 contentType: 'application/pdf'
             })
             // console.log(responsePdf)
