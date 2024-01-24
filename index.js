@@ -43,18 +43,21 @@ const start = () => {
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
             // const url = `preview?vin=${msg.text}`
-            instance.get(url).then(res => {
-                fsPromises.writeFile('./file.pdf', res.data, {encoding: 'binary'});
-            })
+            const {data} = await instance.get(url)
+            if (data) {
+                await fsPromises.writeFile('./file.pdf', data, {encoding: 'binary'});
+                await bot.sendDocument(msg.chat.id, './file.pdf', {}, {
+                    filename: 'file.pdf',
+                    contentType: 'application/pdf'
+                })
+            }
+
             // {
             //     const blobFile = res.data
             //     return URL.createObjectURL(blobFile)
             // })
             // console.log(JSON.stringify(responsePdf))
-            // await bot.sendDocument(msg.chat.id, responsePdf, {}, {
-            //     filename: './Example.pdf',
-            //     contentType: 'application/pdf'
-            // })
+
             // console.log(responsePdf)
             // const fileOptions = {
             //     filename: responsePdf,
