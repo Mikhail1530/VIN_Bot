@@ -47,7 +47,7 @@ const start = () => {
             //     const blobFile = res.data
             //     return URL.createObjectURL(blobFile)
             // })
-            console.log(JSON.stringify(responsePdf))
+            console.log(responsePdf)
             // await bot.sendDocument(msg.chat.id, responsePdf, {}, {
             //     filename: 'responsePdf.pdf',
             //     contentType: 'application/pdf'
