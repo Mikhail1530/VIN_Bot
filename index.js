@@ -1,12 +1,12 @@
 const TelegramApi = require('node-telegram-bot-api')
 const axios = require('axios')
-
 const token = '6841869139:AAGsQ-6C3FJxfVPdfJko7Sa2evA0Hyz5Yy4'
 const bot = new TelegramApi(token, {polling: true})
 
 const tokenVin = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6InRlc3QiLCJ1c2VyIjp7ImlkIjoyMDg1MTEsImVtYWlsIjoiYXV0b3BvZGJlcnUxKzFAZ21haWwuY29tIn0sInZlbmRvciI6eyJpZCI6MjczLCJzdGF0dXMiOiJhY3RpdmUiLCJpcCI6WyIxNzIuMjAuMTAuMyIsIjU0Ljg2LjUwLjEzOSIsIjE4NS4xMTUuNC4xNDciLCIxODUuMTE1LjUuMjgiLCI1LjE4OC4xMjkuMjM2Il19LCJpYXQiOjE3MDYwMTI1NzQsImV4cCI6MTcwODYwNDU3NH0.D5hOhF4CUOcMlyE4meRRPggfnZpKejKgDcHrlAWM6e4'
 const instance = axios.create({
     baseURL: "https://www.clearvin.com/rest/vendor/",
+    responseType: 'blob',
     headers: {
         Authorization: `Bearer ${tokenVin}`,
     },
@@ -42,9 +42,13 @@ const start = () => {
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
             // const url = `preview?vin=${msg.text}`
+            // const responsePdf = await instance.get(url).then(res => res.data)
             const responsePdf = await instance.get(url).then(res => res.data)
-
-            console.log(responsePdf)
+            await bot.sendDocument(msg.chat.id, responsePdf, {}, {
+                filename: 'responsePdf',
+                contentType: 'application/pdf'
+            })
+            // console.log(responsePdf)
             // const fileOptions = {
             //     filename: responsePdf,
             //     contentType: 'application/pdf'
