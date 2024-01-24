@@ -48,8 +48,9 @@ const start = () => {
                     filename: `${msg.chat.id}file.pdf`,
                     contentType: 'application/pdf'
                 })
+                await fsPromises.unlink(`./${msg.chat.id}file.pdf`)
             } catch (e) {
-                await bot.sendMessage(msg.chat.id, 'Ошибка сервиса', KEYBOARD)
+                await bot.sendMessage(msg.chat.id, 'Такого VIN номера в базе не существует', KEYBOARD)
             }
             allRequests += 1
             listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
@@ -65,7 +66,7 @@ const start = () => {
         if (match[0] == '/delete_user' && authenticate_users(msg.from.id)) {
             await bot.sendMessage(msg.chat.id, `Чтобы удалить юзера просто напишите его номер ID`)
         }
-        if (Number.isInteger(+msg.text) && authenticate_users(msg.from.id)) {
+        if (Number.isInteger(+msg.text)>6 && authenticate_users(msg.from.id)) {
             authUsersId = authUsersId.filter(u => u !== +msg.text)
             await bot.sendMessage(msg.chat.id, `Пользователь удален`)
         }
