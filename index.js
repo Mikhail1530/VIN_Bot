@@ -42,15 +42,15 @@ const start = () => {
         }
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-            const {data} = await instance.get(url)
-            if (data) {
-                await fsPromises.writeFile(`./${msg.chat.id}file.pdf`, data, {encoding: 'binary'});
-                await bot.sendDocument(msg.chat.id, `./${msg.chat.id}file.pdf`, {}, {
-                    filename: `${msg.chat.id}file.pdf`,
-                    contentType: 'application/pdf'
-                })
-            }
-            console.log(data)
+            const response = await instance.get(url)
+            // if (data) {
+            //     await fsPromises.writeFile(`./${msg.chat.id}file.pdf`, data, {encoding: 'binary'});
+            //     await bot.sendDocument(msg.chat.id, `./${msg.chat.id}file.pdf`, {}, {
+            //         filename: `${msg.chat.id}file.pdf`,
+            //         contentType: 'application/pdf'
+            //     })
+            // }
+            console.log(response)
             allRequests += 1
             listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
         }
