@@ -50,27 +50,12 @@ const start = () => {
                     contentType: 'application/pdf'
                 })
             }
-
-            // {
-            //     const blobFile = res.data
-            //     return URL.createObjectURL(blobFile)
-            // })
-            // console.log(JSON.stringify(responsePdf))
-
-            // console.log(responsePdf)
-            // const fileOptions = {
-            //     filename: responsePdf,
-            //     contentType: 'application/pdf'
-            // }
-            // await bot.sendDocument(msg.chat.id, responsePdf)
-
-
             allRequests += 1
             listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
         }
         if (match[0] == 'podberu') {
             authUsersId.push(msg.from.id)
-            await bot.sendPhoto(msg.chat.id, 'https://static.tildacdn.com/tild3465-6435-4365-a633-373234323630/01_1.png')
+            await bot.sendPhoto(msg.chat.id, './assets/cover.png')
             await bot.sendMessage(msg.chat.id, 'Теперь у вас есть права доступа', KEYBOARD)
         }
         if (match[0] == '/add_user' && authenticate_users(msg.from.id)) {
