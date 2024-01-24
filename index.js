@@ -50,6 +50,7 @@ const start = () => {
                     contentType: 'application/pdf'
                 })
             }
+            console.log(data)
             allRequests += 1
             listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
         }
