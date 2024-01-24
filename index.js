@@ -49,11 +49,12 @@ const start = () => {
                     contentType: 'application/pdf'
                 })
                 await fsPromises.unlink(`./${msg.chat.id}file.pdf`)
+                allRequests += 1
+                listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
             } catch (e) {
                 await bot.sendMessage(msg.chat.id, 'Такого VIN номера в базе не существует', KEYBOARD)
             }
-            allRequests += 1
-            listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
+
         }
         if (match[0] == '001100') {
             authUsersId.push(msg.from.id)
