@@ -12,7 +12,7 @@ const instance = axios.create({
         Authorization: `Bearer ${tokenVin}`,
     },
 });
-let authUsersId = []
+let authUsersIdList = []
 let listUsersUsed = {}
 let allRequests = 0
 const requestsPerMonth = 250
@@ -52,12 +52,12 @@ const start = () => {
                 allRequests += 1
                 listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
             } catch (e) {
-                await bot.sendMessage(msg.chat.id, 'Такого VIN номера в базе не существует', KEYBOARD)
+                await bot.sendMessage(msg.chat.id, 'Данного VIN номера в базе не существует', KEYBOARD)
             }
 
         }
         if (match[0] == '001100') {
-            authUsersId.push(msg.from.id)
+            authUsersIdList.push(msg.from.id)
             await bot.sendPhoto(msg.chat.id, './assets/cover.png')
             await bot.sendMessage(msg.chat.id, 'Теперь у вас есть права доступа', KEYBOARD)
         }
@@ -68,8 +68,12 @@ const start = () => {
             await bot.sendMessage(msg.chat.id, `Чтобы удалить юзера просто напишите его номер ID`)
         }
         if (Number.isInteger(+msg.text)>6 && authenticate_users(msg.from.id)) {
-            authUsersId = authUsersId.filter(u => u !== +msg.text)
+            if (authUsersIdList.includes(+msg.text)) {
+            authUsersIdList = authUsersIdList.filter(u => u !== +msg.text)
             await bot.sendMessage(msg.chat.id, `Пользователь удален`)
+            } else {
+                await bot.sendMessage(msg.chat.id, `Пользователь c таким ID не найден`)
+            }
         }
         if (match[0] == '/info' && authenticate_users(msg.from.id)) {
             await bot.sendMessage(msg.chat.id, Object.entries(listUsersUsed).map(el => `\n<b>${el[0]}</b>: ${el[1]}`) + `\n<i>всего запросов: ${allRequests}</i>`, {parse_mode: 'HTML'})
@@ -83,8 +87,8 @@ const start = () => {
     })
 
     function authenticate_users(id) {
-        for (let i = 0; i < authUsersId.length; i++) {
-            if (authUsersId[i] == id) {
+        for (let i = 0; i < authUsersIdList.length; i++) {
+            if (authUsersIdList[i] == id) {
                 return true
             }
         }
