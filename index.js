@@ -67,7 +67,7 @@ const start = () => {
         if (match[0] == '/delete_user' && authenticate_users(msg.from.id)) {
             await bot.sendMessage(msg.chat.id, `Чтобы удалить юзера просто напишите его номер ID`)
         }
-        if (Number.isInteger(+msg.text)>6 && authenticate_users(msg.from.id)) {
+        if (Number.isInteger(+msg.text>6) && authenticate_users(msg.from.id)) {
             if (authUsersIdList.includes(+msg.text)) {
             authUsersIdList = authUsersIdList.filter(u => u !== +msg.text)
             await bot.sendMessage(msg.chat.id, `Пользователь удален`)
