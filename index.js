@@ -21,7 +21,7 @@ const requestsPerMonth = 250
 const KEYBOARD = {
     reply_markup: JSON.stringify({
         keyboard: [
-            ['🆔 id', '💭 info'],
+            ['🆔 id', '💬 info'],
             ['➕ add_user', '🪒 delete_user'],
             ['✅ VIN'],
         ]
@@ -75,7 +75,7 @@ const start = () => {
                 await bot.sendMessage(msg.chat.id, `Пользователь c таким ID не найден`)
             }
         }
-        if (match[0] == '💭 info' && authenticate_users(msg.from.id)) {
+        if (match[0] == '💬 info' && authenticate_users(msg.from.id)) {
             await bot.sendMessage(msg.chat.id, Object.entries(listUsersUsed).map(el => `\n<b>${el[0]}</b>: ${el[1]}`) + `\n<i>всего запросов: ${allRequests}</i>`, {parse_mode: 'HTML'})
         }
         if (allRequests !== 0 && (allRequests % 240 === 0 || allRequests % 245 === 0)) {
