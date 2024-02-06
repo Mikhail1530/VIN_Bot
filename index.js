@@ -24,7 +24,8 @@ const KEYBOARD = {
             ['🆔 id', '💬 info'],
             ['➕ add_user', '🪒 delete_user'],
             ['✅ VIN'],
-        ]
+        ],
+        resize_keyboard: true
     })
 }
 const start = () => {
