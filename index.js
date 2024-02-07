@@ -4,7 +4,7 @@ const token = '6841869139:AAGsQ-6C3FJxfVPdfJko7Sa2evA0Hyz5Yy4'
 const bot = new TelegramApi(token, {polling: true})
 const fsPromises = require('fs').promises
 
-const tokenVin = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6InRlc3QiLCJ1c2VyIjp7ImlkIjoyMDg1MTEsImVtYWlsIjoiYXV0b3BvZGJlcnUxKzFAZ21haWwuY29tIn0sInZlbmRvciI6eyJpZCI6MjczLCJzdGF0dXMiOiJhY3RpdmUiLCJpcCI6WyIxNzIuMjAuMTAuMyIsIjU0Ljg2LjUwLjEzOSIsIjE4NS4xMTUuNC4xNDciLCIxODUuMTE1LjUuMjgiLCI1LjE4OC4xMjkuMjM2Il19LCJpYXQiOjE3MDYwMTI1NzQsImV4cCI6MTcwODYwNDU3NH0.D5hOhF4CUOcMlyE4meRRPggfnZpKejKgDcHrlAWM6e4'
+// const tokenVin = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6InRlc3QiLCJ1c2VyIjp7ImlkIjoyMDg1MTEsImVtYWlsIjoiYXV0b3BvZGJlcnUxKzFAZ21haWwuY29tIn0sInZlbmRvciI6eyJpZCI6MjczLCJzdGF0dXMiOiJhY3RpdmUiLCJpcCI6WyIxNzIuMjAuMTAuMyIsIjU0Ljg2LjUwLjEzOSIsIjE4NS4xMTUuNC4xNDciLCIxODUuMTE1LjUuMjgiLCI1LjE4OC4xMjkuMjM2Il19LCJpYXQiOjE3MDYwMTI1NzQsImV4cCI6MTcwODYwNDU3NH0.D5hOhF4CUOcMlyE4meRRPggfnZpKejKgDcHrlAWM6e4'
 const instance = axios.create({
     baseURL: "https://www.clearvin.com/rest/vendor/",
     // responseType: "arraybuffer",
@@ -42,27 +42,43 @@ const start = () => {
         }
 
 
-
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
+            let accessToken = ''
             try {
-                const {data} = await instance.get(url, {headers: {Authorization: `Bearer ${tokenVin}`}, responseType: "arraybuffer"})
-
-                await fsPromises.writeFile(`./${msg.chat.id}file.pdf`, data, {encoding: 'binary'});
-                await bot.sendDocument(msg.chat.id, `./${msg.chat.id}file.pdf`, {}, {
-                    filename: `${msg.chat.id}file.pdf`,
-                    contentType: 'application/pdf'
+                await instance.post('login', {
+                    email: "autopodberu1+1@gmail.com",
+                    password: "TViGgDAg"
+                }).then((res) => {
+                    console.log(res)
+                    if (res.status.toString() === 'ok') {
+                        accessToken = res.token
+                    } else {
+                        return bot.sendMessage(msg.chat.id, 'Ошибка авторизации')
+                    }
                 })
-                await fsPromises.unlink(`./${msg.chat.id}file.pdf`)
-                allRequests += 1
-                listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
-            } catch (e) {
+
+            //     const {data} = await instance.get(url, {
+            //         headers: {Authorization: `Bearer ${accessToken}`},
+            //         responseType: "arraybuffer"
+            //     })
+            //
+            //     await fsPromises.writeFile(`./${msg.chat.id}file.pdf`, data, {encoding: 'binary'});
+            //     await bot.sendDocument(msg.chat.id, `./${msg.chat.id}file.pdf`, {}, {
+            //         filename: `${msg.chat.id}file.pdf`,
+            //         contentType: 'application/pdf'
+            //     })
+            //
+            //     await fsPromises.unlink(`./${msg.chat.id}file.pdf`)
+            //     allRequests += 1
+            //     listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
+            }
+            catch (e) {
                 // if we get error (message field is there), we must update token -> post request we need to do
                 await bot.sendMessage(msg.chat.id, 'Данного VIN номера в базе не существует')
             }
 
         }
-
 
 
         if (match[0] == '001100') {
@@ -76,10 +92,10 @@ const start = () => {
         if (match[0] == '🪒 delete_user' && authenticate_users(msg.from.id)) {
             await bot.sendMessage(msg.chat.id, `Чтобы удалить юзера просто напишите его номер ID`)
         }
-        if (Number.isInteger(+msg.text) && +msg.text.length>6 && authenticate_users(msg.from.id)) {
+        if (Number.isInteger(+msg.text) && +msg.text.length > 6 && authenticate_users(msg.from.id)) {
             if (authUsersIdList.includes(+msg.text)) {
-            authUsersIdList = authUsersIdList.filter(u => u !== +msg.text)
-            await bot.sendMessage(msg.chat.id, `Пользователь удален`)
+                authUsersIdList = authUsersIdList.filter(u => u !== +msg.text)
+                await bot.sendMessage(msg.chat.id, `Пользователь удален`)
             } else {
                 await bot.sendMessage(msg.chat.id, `Пользователь c таким ID не найден`)
             }
