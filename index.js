@@ -45,18 +45,25 @@ const start = () => {
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
             let accessToken = ''
-            // try {
-            instance.post('login', {
-                email: "autopodberu1+1@gmail.com",
-                password: "TViGgDAg"
-            }).then((res) => {
-                console.log(res)
-                if (res.data.status.toString() === 'ok') {
-                    accessToken = res.token
-                } else {
-                    return bot.sendMessage(msg.chat.id, 'Ошибка авторизации')
+            try {
+                const res = await instance.post('login', {
+                    email: "autopodberu1+1@gmail.com",
+                    password: "TViGgDAg"
+                })
+                if (res) {
+                    console.log(res)
                 }
-            }).catch(e => console.log(e))
+            } catch (e) {
+                console.log(e)
+            }
+            //     .then((res) => {
+            //     console.log(res)
+            //     if (res.data.status.toString() === 'ok') {
+            //         accessToken = res.token
+            //     } else {
+            //         return bot.sendMessage(msg.chat.id, 'Ошибка авторизации')
+            //     }
+            // }).catch(e => console.log(e))
 
             //     const {data} = await instance.get(url, {
             //         headers: {Authorization: `Bearer ${accessToken}`},
