@@ -45,18 +45,18 @@ const start = () => {
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
             let accessToken = ''
-            try {
-                await instance.post('login', {
-                    email: "autopodberu1+1@gmail.com",
-                    password: "TViGgDAg"
-                }).then((res) => {
-                    console.log(res)
-                    if (res.data.status.toString() === 'ok') {
-                        accessToken = res.token
-                    } else {
-                        return bot.sendMessage(msg.chat.id, 'Ошибка авторизации')
-                    }
-                })
+            // try {
+            instance.post('login', {
+                email: "autopodberu1+1@gmail.com",
+                password: "TViGgDAg"
+            }).then((res) => {
+                console.log(res)
+                if (res.data.status.toString() === 'ok') {
+                    accessToken = res.token
+                } else {
+                    return bot.sendMessage(msg.chat.id, 'Ошибка авторизации')
+                }
+            }).catch(e => console.log(e))
 
             //     const {data} = await instance.get(url, {
             //         headers: {Authorization: `Bearer ${accessToken}`},
@@ -72,11 +72,11 @@ const start = () => {
             //     await fsPromises.unlink(`./${msg.chat.id}file.pdf`)
             //     allRequests += 1
             //     listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
-            }
-            catch (e) {
-                // if we get error (message field is there), we must update token -> post request we need to do
-                await bot.sendMessage(msg.chat.id, 'Данного VIN номера в базе не существует')
-            }
+            // }
+            // catch (e) {
+            // if we get error (message field is there), we must update token -> post request we need to do
+            //     await bot.sendMessage(msg.chat.id, 'Данного VIN номера в базе не существует')
+            // }
 
         }
 
