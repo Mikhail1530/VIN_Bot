@@ -43,6 +43,7 @@ const start = () => {
 
 
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
+            console.log('1')
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
             let accessToken = ''
             try {
