@@ -17,6 +17,8 @@ let listUsersUsed = {}
 let allRequests = 0
 const requestsPerMonth = 250
 let timeToRefresh = 0
+let accessToken = ''
+let status = ''
 
 
 const KEYBOARD = {
@@ -45,8 +47,6 @@ const start = () => {
 
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-            let accessToken = ''
-            let status = ''
             let timeNow = new Date().getTime() / 1000
 
             if ((timeNow - timeToRefresh) > 7140 || timeToRefresh === 0) {
@@ -73,11 +73,12 @@ const start = () => {
                     await fsPromises.unlink(`./${msg.chat.id}file.pdf`)
                     allRequests += 1
                     listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
-                } else {
+                }
+                if (status === 'error') {
                     return bot.sendMessage(msg.chat.id, 'Ошибка авторизации')
                 }
             } catch (e) {
-                await bot.sendMessage(msg.chat.id, 'Данного VIN номера в базе не существует')
+                await bot.sendMessage(msg.chat.id, 'Ошибка сервиса')
             }
 
         }
