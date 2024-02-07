@@ -16,6 +16,7 @@ let authUsersIdList = []
 let listUsersUsed = {}
 let allRequests = 0
 const requestsPerMonth = 250
+let timeToRefresh = 0
 
 
 const KEYBOARD = {
@@ -45,39 +46,39 @@ const start = () => {
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
             let accessToken = ''
-            // try {
-            const res = await instance.post('login', {
-                email: "autopodberu1+1@gmail.com",
-                password: "TViGgDAg"
-            })
-                .then((res) => {
-                console.log(res)
-                if (res.data.status.toString() === 'ok') {
-                    accessToken = res.token
+            let status = ''
+            let timeNow = new Date().getTime() / 1000
+
+            if ((timeNow - timeToRefresh) < 7140) {
+                const res = await instance.post('login', {
+                    email: "autopodberu1+1@gmail.com",
+                    password: "TViGgDAg"
+                })
+                accessToken = res.data.token
+                status = res.data.status
+                timeToRefresh = new Date().getTime() / 1000
+            }
+
+            try {
+                if (status === 'ok') {
+                    const {data} = await instance.get(url, {
+                        headers: {Authorization: `Bearer ${accessToken}`},
+                        responseType: "arraybuffer"
+                    })
+                    await fsPromises.writeFile(`./${msg.chat.id}file.pdf`, data, {encoding: 'binary'});
+                    await bot.sendDocument(msg.chat.id, `./${msg.chat.id}file.pdf`, {}, {
+                        filename: `${msg.chat.id}file.pdf`,
+                        contentType: 'application/pdf'
+                    })
+                    await fsPromises.unlink(`./${msg.chat.id}file.pdf`)
+                    allRequests += 1
+                    listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
                 } else {
                     return bot.sendMessage(msg.chat.id, 'Ошибка авторизации')
                 }
-            }).catch(e => console.log(e))
-
-            //     const {data} = await instance.get(url, {
-            //         headers: {Authorization: `Bearer ${accessToken}`},
-            //         responseType: "arraybuffer"
-            //     })
-            //
-            //     await fsPromises.writeFile(`./${msg.chat.id}file.pdf`, data, {encoding: 'binary'});
-            //     await bot.sendDocument(msg.chat.id, `./${msg.chat.id}file.pdf`, {}, {
-            //         filename: `${msg.chat.id}file.pdf`,
-            //         contentType: 'application/pdf'
-            //     })
-            //
-            //     await fsPromises.unlink(`./${msg.chat.id}file.pdf`)
-            //     allRequests += 1
-            //     listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
-            // }
-            // catch (e) {
-            // if we get error (message field is there), we must update token -> post request we need to do
-            //     await bot.sendMessage(msg.chat.id, 'Данного VIN номера в базе не существует')
-            // }
+            } catch (e) {
+                await bot.sendMessage(msg.chat.id, 'Данного VIN номера в базе не существует')
+            }
 
         }
 
