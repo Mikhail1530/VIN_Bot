@@ -90,6 +90,7 @@ const start = () => {
 
 
         if (match[0] == '001100') {
+            console.log('password')
             authUsersIdList.push(msg.from.id)
             await bot.sendPhoto(msg.chat.id, './assets/cover.png')
             await bot.sendMessage(msg.chat.id, 'Теперь у вас есть права доступа', KEYBOARD)
