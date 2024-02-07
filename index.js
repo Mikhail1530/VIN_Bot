@@ -51,7 +51,7 @@ const start = () => {
                     password: "TViGgDAg"
                 }).then((res) => {
                     console.log(res)
-                    if (res.status.toString() === 'ok') {
+                    if (res.data.status.toString() === 'ok') {
                         accessToken = res.token
                     } else {
                         return bot.sendMessage(msg.chat.id, 'Ошибка авторизации')
