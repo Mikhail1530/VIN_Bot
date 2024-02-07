@@ -43,28 +43,21 @@ const start = () => {
 
 
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
-            console.log('1')
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
             let accessToken = ''
-            try {
-                const res = await instance.post('login', {
-                    email: "autopodberu1+1@gmail.com",
-                    password: "TViGgDAg"
-                })
-                if (res) {
-                    console.log(res)
+            // try {
+            const res = await instance.post('login', {
+                email: "autopodberu1+1@gmail.com",
+                password: "TViGgDAg"
+            })
+                .then((res) => {
+                console.log(res)
+                if (res.data.status.toString() === 'ok') {
+                    accessToken = res.token
+                } else {
+                    return bot.sendMessage(msg.chat.id, 'Ошибка авторизации')
                 }
-            } catch (e) {
-                console.log(e)
-            }
-            //     .then((res) => {
-            //     console.log(res)
-            //     if (res.data.status.toString() === 'ok') {
-            //         accessToken = res.token
-            //     } else {
-            //         return bot.sendMessage(msg.chat.id, 'Ошибка авторизации')
-            //     }
-            // }).catch(e => console.log(e))
+            }).catch(e => console.log(e))
 
             //     const {data} = await instance.get(url, {
             //         headers: {Authorization: `Bearer ${accessToken}`},
@@ -90,7 +83,6 @@ const start = () => {
 
 
         if (match[0] == '001100') {
-            console.log('password')
             authUsersIdList.push(msg.from.id)
             await bot.sendPhoto(msg.chat.id, './assets/cover.png')
             await bot.sendMessage(msg.chat.id, 'Теперь у вас есть права доступа', KEYBOARD)
