@@ -7,10 +7,10 @@ const fsPromises = require('fs').promises
 const tokenVin = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6InRlc3QiLCJ1c2VyIjp7ImlkIjoyMDg1MTEsImVtYWlsIjoiYXV0b3BvZGJlcnUxKzFAZ21haWwuY29tIn0sInZlbmRvciI6eyJpZCI6MjczLCJzdGF0dXMiOiJhY3RpdmUiLCJpcCI6WyIxNzIuMjAuMTAuMyIsIjU0Ljg2LjUwLjEzOSIsIjE4NS4xMTUuNC4xNDciLCIxODUuMTE1LjUuMjgiLCI1LjE4OC4xMjkuMjM2Il19LCJpYXQiOjE3MDYwMTI1NzQsImV4cCI6MTcwODYwNDU3NH0.D5hOhF4CUOcMlyE4meRRPggfnZpKejKgDcHrlAWM6e4'
 const instance = axios.create({
     baseURL: "https://www.clearvin.com/rest/vendor/",
-    responseType: "arraybuffer",
-    headers: {
-        Authorization: `Bearer ${tokenVin}`,
-    },
+    // responseType: "arraybuffer",
+    // headers: {
+    //     Authorization: `Bearer ${tokenVin}`,
+    // },
 });
 let authUsersIdList = []
 let listUsersUsed = {}
@@ -35,15 +35,19 @@ const start = () => {
     ])
     bot.onText(/(.+)/, async (msg, match) => {
         if (match[0] == '🆔 id' && authenticate_users(msg.from.id)) {
-            await bot.sendMessage(msg.chat.id, 'Ваш ID: ' + msg.from.id, KEYBOARD)
+            await bot.sendMessage(msg.chat.id, 'Ваш ID: ' + msg.from.id)
         }
         if (match[0] == '✅ VIN' && authenticate_users(msg.from.id)) {
-            await bot.sendMessage(msg.chat.id, 'Введите VIN авто (17 символов)', KEYBOARD)
+            await bot.sendMessage(msg.chat.id, 'Введите VIN авто (17 символов)')
         }
+
+
+
         if (match[0].length === 17 && authenticate_users(msg.from.id)) {
             const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
             try {
-                const {data} = await instance.get(url)
+                const {data} = await instance.get(url, {headers: {Authorization: `Bearer ${tokenVin}`}, responseType: "arraybuffer"})
+
                 await fsPromises.writeFile(`./${msg.chat.id}file.pdf`, data, {encoding: 'binary'});
                 await bot.sendDocument(msg.chat.id, `./${msg.chat.id}file.pdf`, {}, {
                     filename: `${msg.chat.id}file.pdf`,
@@ -53,10 +57,14 @@ const start = () => {
                 allRequests += 1
                 listUsersUsed[msg.from.first_name] ? listUsersUsed[msg.from.first_name] += 1 : listUsersUsed[msg.from.first_name] = 1
             } catch (e) {
-                await bot.sendMessage(msg.chat.id, 'Данного VIN номера в базе не существует', KEYBOARD)
+                // if we get error (message field is there), we must update token -> post request we need to do
+                await bot.sendMessage(msg.chat.id, 'Данного VIN номера в базе не существует')
             }
 
         }
+
+
+
         if (match[0] == '001100') {
             authUsersIdList.push(msg.from.id)
             await bot.sendPhoto(msg.chat.id, './assets/cover.png')
@@ -80,7 +88,7 @@ const start = () => {
             await bot.sendMessage(msg.chat.id, Object.entries(listUsersUsed).map(el => `\n<b>${el[0]}</b>: ${el[1]}`) + `\n<i>всего запросов: ${allRequests}</i>`, {parse_mode: 'HTML'})
         }
         if (allRequests !== 0 && (allRequests % 240 === 0 || allRequests % 245 === 0)) {
-            await bot.sendMessage(msg.chat.id, `Осталось ${requestsPerMonth - allRequests} запросов`, KEYBOARD)
+            await bot.sendMessage(msg.chat.id, `Осталось ${requestsPerMonth - allRequests} запросов`)
         }
         if (match[0] && !authenticate_users(msg.from.id)) {
             await bot.sendMessage(msg.chat.id, 'Вы не авторизованы, введите пароль')
