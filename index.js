@@ -49,7 +49,7 @@ const start = () => {
             let status = ''
             let timeNow = new Date().getTime() / 1000
 
-            if ((timeNow - timeToRefresh) < 7140) {
+            if ((timeNow - timeToRefresh) > 7140 || timeToRefresh === 0) {
                 const res = await instance.post('login', {
                     email: "autopodberu1+1@gmail.com",
                     password: "TViGgDAg"
