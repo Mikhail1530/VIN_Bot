@@ -49,7 +49,6 @@ const start = async () => {
                     }
                 }
                 if (match[0] === '✅ VIN' && await authenticate_users(chatId)) {
-
                     await bot.sendMessage(chatId, 'Введите <b>VIN</b> авто (17 символов)', {parse_mode: 'HTML'})
                 }
 
@@ -59,8 +58,8 @@ const start = async () => {
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
                     let timeNow = Math.floor(new Date().getTime() / 1000)
                     const res = Vars.findOne({where: {id: 555}})
-                    let accessToken = res.data.accessToken
-                    let status = res.data.status
+                    let accessToken = await res.dataValues.accessToken
+                    let status = res.dataValues.status
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
                         return res.date
