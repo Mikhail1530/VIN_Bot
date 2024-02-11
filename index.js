@@ -59,6 +59,7 @@ const start = async () => {
                     let timeNow = new Date().getHours()
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
+                        console.log(res.data)
                         return res.date
                     }).catch(e => console.log(e,'time error'))
 
@@ -72,7 +73,7 @@ const start = async () => {
                             status: result.data.status,
                             date: newTime,
                             accessToken: result.data.token,
-                        }, {where: {id: 555}})
+                        }, {where: {id: 555}}).catch(e=>console.log(e))
                     }
 
                     const res = await Vars.findOne({where: {id: 555}})
