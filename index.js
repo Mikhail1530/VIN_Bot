@@ -59,8 +59,8 @@ const start = async () => {
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
                     let timeNow = Math.floor(new Date().getTime() / 1000)
                     const res = Vars.findOne({where: {id: 555}})
-                    let accessToken = res.accessToken
-                    let status = res.status
+                    let accessToken = res.data.accessToken
+                    let status = res.data.status
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
                         return res.date
