@@ -50,7 +50,6 @@ const start = async () => {
                     }
                 }
                 if (match[0] === '✅ VIN' && await authenticate_users(chatId)) {
-                    await ListUsers.drop()
                     await bot.sendMessage(chatId, 'Введите <b>VIN</b> авто (17 символов)', {parse_mode: 'HTML'})
                 }
 
@@ -61,7 +60,6 @@ const start = async () => {
                     let timeNow = new Date().getHours()
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
-                        console.log(res.data)
                         return res.date
                     }).catch(e => console.log(e,'time error'))
 
