@@ -66,16 +66,12 @@ const start = async () => {
 
 
                     if ((timeNow - time) > 7140 || time === 0) {
-                        // const res = await
-                         instance.post('login', {
+                        const res = await instance.post('login', {
                             email: "autopodberu1+1@gmail.com",
                             password: "TViGgDAg"
-                        }).then(res => {
-
-                            console.log(res)
-                            accessToken = res.data.token
-                            status = res.data.status
-                        }).catch(e=>console.log(e))
+                        })
+                        accessToken = res.data.token
+                        status = res.data.status
 
                         const newTime = Math.floor(new Date().getTime() / 1000)
                         await Vars.update({date: newTime, accessToken: accessToken, status: status}, {where: {id: 555}})
@@ -83,16 +79,16 @@ const start = async () => {
 
                     try {
                         if (status === 'ok') {
-                            // const {data} = await instance.get(url, {
-                            //     headers: {Authorization: `Bearer ${accessToken}`},
-                            //     responseType: "arraybuffer"
-                            // })
-                            // await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
-                            // await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
-                            //     filename: `${chatId}file.pdf`,
-                            //     contentType: 'application/pdf'
-                            // })
-                            // await fsPromises.unlink(`./${chatId}file.pdf`)
+                            const {data} = await instance.get(url, {
+                                headers: {Authorization: `Bearer ${accessToken}`},
+                                responseType: "arraybuffer"
+                            })
+                            await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
+                            await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
+                                filename: `${chatId}file.pdf`,
+                                contentType: 'application/pdf'
+                            })
+                            await fsPromises.unlink(`./${chatId}file.pdf`)
                             await Vars.update({checks: sequelize.literal('checks + 1')}, {where: {id: chatId}})
                         }
                         if (status === 'error') {
