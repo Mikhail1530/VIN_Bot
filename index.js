@@ -5,6 +5,7 @@ const bot = new TelegramApi(token, {polling: true})
 const fsPromises = require('fs').promises
 const sequelize = require('./db')
 const {ListUsers, Vars} = require('./models')
+const {logger} = require("sequelize/lib/utils/logger");
 
 const instance = axios.create({
     baseURL: "https://www.clearvin.com/rest/vendor/",
