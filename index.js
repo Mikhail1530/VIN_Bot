@@ -57,28 +57,27 @@ const start = async () => {
                     await bot.sendMessage(chatId, 'Запрос займет немного времени, ожидайте')
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
                     let timeNow = Math.floor(new Date().getTime() / 1000)
-                    const res = await Vars.findOne({where: {id: 555}})
-                    let accessToken = res.dataValues.accessToken
-                    let status = res.dataValues.status
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
                         return res.date
                     }).catch(e => console.log('time error'))
 
-
                     if ((timeNow - time) > 7140 || time === 0) {
-                        const res = await instance.post('login', {
+                        const result = await instance.post('login', {
                             email: "autopodberu1+1@gmail.com",
                             password: "TViGgDAg"
                         })
-
                         const newTime = Math.floor(new Date().getTime() / 1000)
                         await Vars.update({
+                            status: result.data.status,
                             date: newTime,
-                            accessToken: res.data.token,
-                            status: res.data.status
+                            accessToken: result.data.token,
                         }, {where: {id: 555}})
                     }
+
+                    const res = await Vars.findOne({where: {id: 555}})
+                    let accessToken = res.dataValues.accessToken
+                    let status = res.dataValues.status
 
                     try {
                         if (status === 'ok') {
