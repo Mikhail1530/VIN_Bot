@@ -14,7 +14,7 @@ const Vars = sequelize.define('Vars', {
     id: {type: DataTypes.INTEGER, primaryKey: true, defaultValue: 555},
     status: {type: DataTypes.STRING, defaultValue: ''},
     date: {type: DataTypes.INTEGER, defaultValue: 0},
-    accessToken: {type: DataTypes.STRING, defaultValue: ''},
+    accessToken: {type: DataTypes.STRING(1234), defaultValue: ''},
 }, {
     timestamps: false
 })
