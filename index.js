@@ -78,7 +78,7 @@ const start = async () => {
                     const res = await Vars.findOne({where: {id: 555}})
                     let accessToken = res.dataValues.accessToken
                     let status = res.dataValues.status
-
+                    console.log(accessToken, status)
                     try {
                         if (status === 'ok') {
                             const {data} = await instance.get(url, {
