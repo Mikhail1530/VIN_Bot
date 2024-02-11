@@ -49,7 +49,6 @@ const start = async () => {
                     }
                 }
                 if (match[0] === '✅ VIN' && await authenticate_users(chatId)) {
-                    await Vars.drop({where: {id: 555}})
                     await bot.sendMessage(chatId, 'Введите <b>VIN</b> авто (17 символов)', {parse_mode: 'HTML'})
                 }
 
@@ -61,7 +60,7 @@ const start = async () => {
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
                         return res.date
-                    }).catch(e => console.log('time error'))
+                    }).catch(e => console.log(e,'time error'))
 
                     if ((timeNow - time) > 71 || time === 0) {
                         const result = await instance.post('login', {
