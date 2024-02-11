@@ -13,7 +13,7 @@ const ListUsers = sequelize.define('ListUsers', {
 const Vars = sequelize.define('Vars', {
     id: {type: DataTypes.INTEGER, primaryKey: true, defaultValue: 555},
     status: {type: DataTypes.STRING, defaultValue: ''},
-    date: {type: DataTypes.INTEGER, unique: true, defaultValue: 0},
+    date: {type: DataTypes.BIGINT, defaultValue: 0},
     accessToken: {type: DataTypes.STRING, defaultValue: ''},
 }, {
     timestamps: false

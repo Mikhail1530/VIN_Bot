@@ -72,13 +72,13 @@ const start = async () => {
                             status: result.data.status,
                             date: newTime,
                             accessToken: result.data.token,
-                        }, {where: {id: 555}}).then(res=>console.log(res)).catch(e=> console.log(e))
+                        }, {where: {id: 555}})
                     }
 
                     const res = await Vars.findOne({where: {id: 555}})
                     let accessToken = res.dataValues.accessToken
                     let status = res.dataValues.status
-                    console.log(accessToken, status)
+
                     try {
                         if (status === 'ok') {
                             const {data} = await instance.get(url, {
