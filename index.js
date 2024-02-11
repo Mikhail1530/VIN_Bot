@@ -10,8 +10,6 @@ const instance = axios.create({
     baseURL: "https://www.clearvin.com/rest/vendor/",
 });
 
-let accessToken = ''
-let status = ''
 const validValues = ['🆔 id', '💬 info', '➕ add_user', '🪒 delete_user', '✅ VIN', '/start']
 
 const KEYBOARD = {
@@ -51,6 +49,7 @@ const start = async () => {
                     }
                 }
                 if (match[0] === '✅ VIN' && await authenticate_users(chatId)) {
+
                     await bot.sendMessage(chatId, 'Введите <b>VIN</b> авто (17 символов)', {parse_mode: 'HTML'})
                 }
 
@@ -59,6 +58,9 @@ const start = async () => {
                     await bot.sendMessage(chatId, 'Запрос займет немного времени, ожидайте')
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
                     let timeNow = Math.floor(new Date().getTime() / 1000)
+                    const res = Vars.findOne({where: {id: 555}})
+                    let accessToken = res.accessToken
+                    let status = res.status
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
                         return res.date
@@ -70,11 +72,13 @@ const start = async () => {
                             email: "autopodberu1+1@gmail.com",
                             password: "TViGgDAg"
                         })
-                        accessToken = res.data.token
-                        status = res.data.status
 
                         const newTime = Math.floor(new Date().getTime() / 1000)
-                        await Vars.update({date: newTime, accessToken: accessToken, status: status}, {where: {id: 555}})
+                        await Vars.update({
+                            date: newTime,
+                            accessToken: res.data.token,
+                            status: res.data.status
+                        }, {where: {id: 555}})
                     }
 
                     try {
@@ -89,7 +93,7 @@ const start = async () => {
                                 contentType: 'application/pdf'
                             })
                             await fsPromises.unlink(`./${chatId}file.pdf`)
-                            await Vars.update({checks: sequelize.literal('checks + 1')}, {where: {id: chatId}})
+                            await ListUsers.increment('checks', {by: 1, where: {chatId: chatId}})
                         }
                         if (status === 'error') {
                             return bot.sendMessage(chatId, 'Ошибка авторизации')
