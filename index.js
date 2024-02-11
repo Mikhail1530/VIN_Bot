@@ -138,6 +138,7 @@ const start = async () => {
                 if (match[0] === '💬 info' && await authenticate_users(chatId)) {
                     const userLists = await ListUsers.findAll()
                     const userList = userLists.map(u => [u.userName, u.checks])
+                    console.log(userList)
                     const allRequests = userList.reduce((acc, cur) => {
                         acc += cur[1]
                         return acc
