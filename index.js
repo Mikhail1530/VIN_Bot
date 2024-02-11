@@ -63,7 +63,7 @@ const start = async () => {
                         return res.date
                     }).catch(e => console.log(e,'time error'))
 
-                    if ((timeNow - time) > 1740 || time === 0) {
+                    if ((timeNow - time) > 7140 || time === 0) {
                         const result = await instance.post('login', {
                             email: "autopodberu1+1@gmail.com",
                             password: "TViGgDAg"
