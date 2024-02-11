@@ -1,21 +1,22 @@
 const sequelize = require('./db')
 const {DataTypes} = require('sequelize')
 
-// const AuthUsersIdList = sequelize.define('authUsersIdList', {
-//     authUsersIdList: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
-// })
-
-// allRequests: {type: DataTypes.INTEGER, defaultValue: 0},
-// timeToRefresh: {type: DataTypes.INTEGER, defaultValue: 0},
-// accessToken: {type: DataTypes.STRING, defaultValue: ''},
-// status: {type: DataTypes.STRING, defaultValue: ''},
 
 const ListUsers = sequelize.define('ListUsers', {
     id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
     chatId: {type: DataTypes.INTEGER, unique: true},
-    checks: {type: DataTypes.INTEGER, defaultValue: 0}
+    userName: {type: DataTypes.STRING, defaultValue: ''},
+    checks: {type: DataTypes.INTEGER, defaultValue: 0},
+}, {
+    timestamps: false
+})
+const Vars = sequelize.define('Vars', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, defaultValue: 555},
+    status: {type: DataTypes.STRING, defaultValue: ''},
+    date: {type: DataTypes.INTEGER, unique: true, defaultValue: 0},
+    accessToken: {type: DataTypes.STRING, defaultValue: ''},
 }, {
     timestamps: false
 })
 
-module.exports = ListUsers;
+module.exports = {ListUsers, Vars}
