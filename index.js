@@ -57,8 +57,8 @@ const start = async () => {
                     await bot.sendMessage(chatId, 'Запрос займет немного времени, ожидайте')
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
                     let timeNow = Math.floor(new Date().getTime() / 1000)
-                    const res = Vars.findOne({where: {id: 555}})
-                    let accessToken = await res.dataValues.accessToken
+                    const res = await Vars.findOne({where: {id: 555}})
+                    let accessToken = res.dataValues.accessToken
                     let status = res.dataValues.status
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
