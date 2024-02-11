@@ -50,6 +50,7 @@ const start = async () => {
                     }
                 }
                 if (match[0] === '✅ VIN' && await authenticate_users(chatId)) {
+                    await ListUsers.drop()
                     await bot.sendMessage(chatId, 'Введите <b>VIN</b> авто (17 символов)', {parse_mode: 'HTML'})
                 }
 
@@ -138,7 +139,6 @@ const start = async () => {
                 if (match[0] === '💬 info' && await authenticate_users(chatId)) {
                     const userLists = await ListUsers.findAll()
                     const userList = userLists.map(u => [u.userName, u.checks])
-                    console.log(userList)
                     const allRequests = userList.reduce((acc, cur) => {
                         acc += cur[1]
                         return acc
