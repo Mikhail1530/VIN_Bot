@@ -12,7 +12,7 @@ const instance = axios.create({
 
 let accessToken = ''
 let status = ''
-const validValues = ['🆔 id','💬 info','➕ add_user','🪒 delete_user','✅ VIN', '/start']
+const validValues = ['🆔 id', '💬 info', '➕ add_user', '🪒 delete_user', '✅ VIN', '/start']
 
 const KEYBOARD = {
     reply_markup: JSON.stringify({
@@ -36,7 +36,6 @@ const start = async () => {
 
     await bot.setMyCommands([
         {command: '/start', description: 'Запустить бота'},
-        {command: '/id', description: 'Узнать свой ID'},
     ])
     bot.onText(/(.+)/, async (msg, match) => {
             const first_name = msg.from.first_name
@@ -67,29 +66,34 @@ const start = async () => {
 
 
                     if ((timeNow - time) > 7140 || time === 0) {
-                        const res = await instance.post('login', {
+                        // const res = await
+                         instance.post('login', {
                             email: "autopodberu1+1@gmail.com",
                             password: "TViGgDAg"
-                        })
-                         accessToken = res.data.token
-                         status = res.data.status
+                        }).then(res => {
+
+                            console.log(res)
+                            accessToken = res.data.token
+                            status = res.data.status
+                        }).catch(e=>console.log(e))
+
                         const newTime = new Date().getTime() / 1000
                         await Vars.update({date: newTime, accessToken: accessToken, status: status}, {where: {id: 555}})
                     }
 
                     try {
                         if (status === 'ok') {
-                            const {data} = await instance.get(url, {
-                                headers: {Authorization: `Bearer ${accessToken}`},
-                                responseType: "arraybuffer"
-                            })
-                            await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
-                            await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
-                                filename: `${chatId}file.pdf`,
-                                contentType: 'application/pdf'
-                            })
-                            await fsPromises.unlink(`./${chatId}file.pdf`)
-                            await Vars.update({checks: sequelize.literal('checks + 1') }, {where: {id: chatId}})
+                            // const {data} = await instance.get(url, {
+                            //     headers: {Authorization: `Bearer ${accessToken}`},
+                            //     responseType: "arraybuffer"
+                            // })
+                            // await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
+                            // await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
+                            //     filename: `${chatId}file.pdf`,
+                            //     contentType: 'application/pdf'
+                            // })
+                            // await fsPromises.unlink(`./${chatId}file.pdf`)
+                            await Vars.update({checks: sequelize.literal('checks + 1')}, {where: {id: chatId}})
                         }
                         if (status === 'error') {
                             return bot.sendMessage(chatId, 'Ошибка авторизации')
@@ -151,10 +155,10 @@ const start = async () => {
                 if (match[0] && await authenticate_users(chatId) === false) {
                     return bot.sendMessage(chatId, 'Вы не авторизованы, введите пароль')
                 }
-                 if (match[0] === '/start' && await authenticate_users(chatId)) {
+                if (match[0] === '/start' && await authenticate_users(chatId)) {
                     return bot.sendMessage(chatId, 'Бот уже запущен', KEYBOARD)
                 }
-                 if (!validValues.includes(match[0]) && !Number.isInteger(+msg.text) && await authenticate_users(chatId) && match[0].length !== 17) {
+                if (!validValues.includes(match[0]) && !Number.isInteger(+msg.text) && await authenticate_users(chatId) && match[0].length !== 17) {
                     return bot.sendMessage(chatId, 'Что-то не то ты мутишь... 🙄')
                 }
             } catch
