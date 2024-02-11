@@ -57,18 +57,18 @@ const start = async () => {
                 if (match[0].length === 17 && await authenticate_users(chatId)) {
                     await bot.sendMessage(chatId, 'Запрос займет немного времени, ожидайте')
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-                    let timeNow = Math.floor(new Date().getTime() / 1000)
+                    let timeNow = Math.floor(new Date().getTime() / 100000)
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
                         return res.date
                     }).catch(e => console.log('time error'))
 
-                    if ((timeNow - time) > 7140 || time === 0) {
+                    if ((timeNow - time) > 71 || time === 0) {
                         const result = await instance.post('login', {
                             email: "autopodberu1+1@gmail.com",
                             password: "TViGgDAg"
                         })
-                        const newTime = Math.floor(new Date().getTime() / 1000)
+                        const newTime = Math.floor(new Date().getTime() / 100000)
                         await Vars.update({
                             status: result.data.status,
                             date: newTime,
