@@ -57,18 +57,18 @@ const start = async () => {
                 if (match[0].length === 17 && await authenticate_users(chatId)) {
                     await bot.sendMessage(chatId, 'Запрос займет немного времени, ожидайте')
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-                    let timeNow = new Date().getHours()
+                    let timeNow = Math.floor(new Date().getTime() / 1000)
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
                         return res.date
                     }).catch(e => console.log(e,'time error'))
 
-                    if ((timeNow - time) > 1 || time === 0) {
+                    if ((timeNow - time) > 1740 || time === 0) {
                         const result = await instance.post('login', {
                             email: "autopodberu1+1@gmail.com",
                             password: "TViGgDAg"
                         })
-                        const newTime = new Date().getHours()
+                        const newTime = Math.floor(new Date().getTime() / 1000)
                         await Vars.update({
                             status: result.data.status,
                             date: newTime,
@@ -139,7 +139,7 @@ const start = async () => {
                     const userList = userLists.map(u => [u.userName, u.checks])
                     const allRequests = userList.reduce((acc, cur) => {
                         acc += cur[1]
-                        return acc
+                        return acc  
                     }, 0)
                     return bot.sendMessage(chatId, userList.map(u => `\n<b>${u[0]}</b>: ${u[1]}`) + `\n<i>всего запросов: ${allRequests}</i>`, {parse_mode: 'HTML'})
                 }
