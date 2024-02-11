@@ -159,7 +159,6 @@ const start = async () => {
                 }
             } catch
                 (e) {
-                console.log(e)
                 await bot.sendMessage(chatId, 'Something crashed on the server')
             }
         }
