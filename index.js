@@ -58,14 +58,14 @@ const start = async () => {
                 if (match[0].length === 17 && await authenticate_users(chatId)) {
                     await bot.sendMessage(chatId, 'Запрос займет немного времени, ожидайте')
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
-                    let timeNow = new Date().getTime() / 1000
+                    let timeNow = new Date().getTime()
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
                         return res.date
                     }).catch(e => console.log('time error'))
 
 
-                    if ((timeNow - time) > 7140 || time === 0) {
+                    if ((timeNow - time) > 7140000 || time === 0) {
                         // const res = await
                          instance.post('login', {
                             email: "autopodberu1+1@gmail.com",
@@ -77,7 +77,7 @@ const start = async () => {
                             status = res.data.status
                         }).catch(e=>console.log(e))
 
-                        const newTime = new Date().getTime() / 1000
+                        const newTime = new Date().getTime()
                         await Vars.update({date: newTime, accessToken: accessToken, status: status}, {where: {id: 555}})
                     }
 
