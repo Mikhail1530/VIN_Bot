@@ -72,7 +72,7 @@ const start = async () => {
                             status: result.data.status,
                             date: newTime,
                             accessToken: result.data.token,
-                        }, {where: {id: 555}})
+                        }, {where: {id: 555}}).then(res=>console.log(res)).catch(e=> console.log(e))
                     }
 
                     const res = await Vars.findOne({where: {id: 555}})
