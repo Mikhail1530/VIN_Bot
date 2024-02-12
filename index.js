@@ -44,7 +44,7 @@ const start = async () => {
                 if (match[0] === '🆔 id' && await authenticate_users(chatId)) {
                     try {
                         const user = await ListUsers.findOne({chatId})
-                        return bot.sendMessage(chatId, `<b>${first_name}</b>. Ваш ID: ${user.chatId}`, {parse_mode: 'HTML'})
+                        return bot.sendMessage(chatId, `<b>${user.userName}</b>. Ваш ID: ${user.chatId}`, {parse_mode: 'HTML'})
                     } catch (e) {
                         return bot.sendMessage(chatId, 'Нибумбум')
                     }
