@@ -50,6 +50,8 @@ const start = async () => {
                     }
                 }
                 if (match[0] === '✅ VIN' && await authenticate_users(chatId)) {
+                    const aa = ListUsers.findAll()
+                    console.log(aa)
                     await bot.sendMessage(chatId, 'Введите <b>VIN</b> авто (17 символов)', {parse_mode: 'HTML'})
                 }
 
