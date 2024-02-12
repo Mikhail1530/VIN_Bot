@@ -37,7 +37,7 @@ const start = async () => {
         {command: '/start', description: 'Запустить бота'},
     ])
     bot.onText(/(.+)/, async (msg, match) => {
-            const first_name = msg.from.first_name
+            const userName = msg.from.first_name
             const chatId = msg.chat.id
 
             try {
@@ -61,7 +61,7 @@ const start = async () => {
 
                     const time = await Vars.findOne({where: {id: 555}}).then(res => {
                         return res.date
-                    }).catch(e => console.log(e,'time error'))
+                    }).catch(e => console.log(e, 'time error'))
 
                     if ((timeNow - time) > 7140 || time === 0) {
                         const result = await instance.post('login', {
@@ -73,7 +73,7 @@ const start = async () => {
                             status: result.data.status,
                             date: newTime,
                             accessToken: result.data.token,
-                        }, {where: {id: 555}}).catch(e=>console.log(e))
+                        }, {where: {id: 555}}).catch(e => console.log(e))
                     }
 
                     const res = await Vars.findOne({where: {id: 555}})
@@ -106,7 +106,7 @@ const start = async () => {
 
                 if (match[0] === '001100') {
                     try {
-                        await ListUsers.create({chatId: msg.chat.id, userName: msg.from.first_name})
+                        await ListUsers.create({chatId, userName})
                         await bot.sendPhoto(chatId, './assets/cover.png')
                         return bot.sendMessage(chatId, 'Теперь у вас есть права доступа', KEYBOARD)
                     } catch (e) {
@@ -139,7 +139,7 @@ const start = async () => {
                     const userList = userLists.map(u => [u.userName, u.checks])
                     const allRequests = userList.reduce((acc, cur) => {
                         acc += cur[1]
-                        return acc  
+                        return acc
                     }, 0)
                     return bot.sendMessage(chatId, userList.map(u => `\n<b>${u[0]}</b>: ${u[1]}`) + `\n<i>всего запросов: ${allRequests}</i>`, {parse_mode: 'HTML'})
                 }
