@@ -50,8 +50,7 @@ const start = async () => {
                     }
                 }
                 if (match[0] === '✅ VIN' && await authenticate_users(chatId)) {
-                    const aa = ListUsers.findAll()
-                    console.log(aa)
+                    await ListUsers.drop()
                     await bot.sendMessage(chatId, 'Введите <b>VIN</b> авто (17 символов)', {parse_mode: 'HTML'})
                 }
 
@@ -108,7 +107,7 @@ const start = async () => {
 
                 if (match[0] === '001100') {
                     try {
-                        await ListUsers.create({chatId: chatId, userName: first_name})
+                        await ListUsers.create({chatId: msg.chat.id, userName: msg.from.first_name})
                         await bot.sendPhoto(chatId, './assets/cover.png')
                         return bot.sendMessage(chatId, 'Теперь у вас есть права доступа', KEYBOARD)
                     } catch (e) {
