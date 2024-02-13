@@ -74,6 +74,8 @@ const start = async () => {
                             date: newTime,
                             accessToken: result.data.token,
                         }, {where: {id: 555}}).catch(e => console.log(e))
+
+                        await fsPromises.writeFile("././token.txt", result.data.token);
                     }
 
                     const res = await Vars.findOne({where: {id: 555}})
