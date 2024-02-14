@@ -49,6 +49,8 @@ const start = async () => {
 
             try {
                 if (match[0] === '🆔 id' && await authenticate_users(chatId)) {
+                    const res = await ListUsers.findAll()
+                    console.log(res)
                     try {
                         const user = await ListUsers.findOne({where: {chatId: chatId}})
                         return bot.sendMessage(chatId, `<b>${user.userName}</b>. Ваш ID: ${user.chatId}`, {parse_mode: 'HTML'})
@@ -57,6 +59,7 @@ const start = async () => {
                     }
                 }
                 if (match[0] === '✅ VIN' && await authenticate_users(chatId)) {
+                    await ListUsers.drop()
                     await bot.sendMessage(chatId, 'Введите <b>VIN</b> авто (17 символов)', {parse_mode: 'HTML'})
                 }
 
