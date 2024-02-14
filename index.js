@@ -49,8 +49,6 @@ const start = async () => {
 
             try {
                 if (match[0] === '🆔 id' && await authenticate_users(chatId)) {
-                    const res = await ListUsers.findAll()
-                    console.log(res)
                     try {
                         const user = await ListUsers.findOne({where: {chatId: chatId}})
                         return bot.sendMessage(chatId, `<b>${user.userName}</b>. Ваш ID: ${user.chatId}`, {parse_mode: 'HTML'})
@@ -61,6 +59,15 @@ const start = async () => {
                 if (match[0] === '✅ VIN' && await authenticate_users(chatId)) {
                     await ListUsers.drop()
                     await bot.sendMessage(chatId, 'Введите <b>VIN</b> авто (17 символов)', {parse_mode: 'HTML'})
+                }
+
+
+                if (match[0] === 'drop' && await authenticate_users(chatId)) {
+                    await ListUsers.drop()
+                }
+                if (match[0] === 'find' && await authenticate_users(chatId)) {
+                    const res = await ListUsers.findAll()
+                    console.log(res)
                 }
 
 
@@ -82,23 +89,23 @@ const start = async () => {
                         await fsPromises.writeFile('../token.js', obj)
                     }
 
-                    try {
-                        const getToken = await fsPromises.readFile('../token.js', 'utf8')
-                        const accessToken = JSON.parse(getToken).token
-                        const {data} = await instance.get(url, {
-                            headers: {Authorization: `Bearer ${accessToken}`},
-                            responseType: "arraybuffer"
-                        })
-                        await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
-                        await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
-                            filename: `${chatId}file.pdf`,
-                            contentType: 'application/pdf'
-                        })
-                        await fsPromises.unlink(`./${chatId}file.pdf`)
-                        await ListUsers.increment('checks', {by: 1, where: {chatId: chatId}})
-                    } catch (e) {
-                        await bot.sendMessage(chatId, 'Такого VIN номера в базе нет')
-                    }
+                    // try {
+                    //     const getToken = await fsPromises.readFile('../token.js', 'utf8')
+                    //     const accessToken = JSON.parse(getToken).token
+                    //     const {data} = await instance.get(url, {
+                    //         headers: {Authorization: `Bearer ${accessToken}`},
+                    //         responseType: "arraybuffer"
+                    //     })
+                    //     await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
+                    //     await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
+                    //         filename: `${chatId}file.pdf`,
+                    //         contentType: 'application/pdf'
+                    //     })
+                    //     await fsPromises.unlink(`./${chatId}file.pdf`)
+                    //     await ListUsers.increment('checks', {by: 1, where: {chatId: chatId}})
+                    // } catch (e) {
+                    //     await bot.sendMessage(chatId, 'Такого VIN номера в базе нет')
+                    // }
                 }
 
                 if (match[0] === '001100') {
