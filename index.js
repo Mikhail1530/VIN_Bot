@@ -57,54 +57,38 @@ const start = async () => {
                 if (match[0].length === 17 && await authenticate_users(chatId)) {
                     await bot.sendMessage(chatId, 'Запрос займет немного времени, ожидайте')
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
+
+                    const objTokenDate = await fsPromises.readFile('../token.js', 'utf8')
+                    const time = JSON.parse(objTokenDate).date
                     let timeNow = Math.floor(new Date().getTime() / 1000)
 
-                    const time = await Vars.findOne({where: {id: 555}}).then(res => {
-                        return res.date
-                    }).catch(e => console.log(e, 'time error'))
-
-                    if ((timeNow - time) > 7140 || time === 0) {
+                    if ((timeNow - time) > 7140) {
                         const result = await instance.post('login', {
                             email: "autopodberu1+1@gmail.com",
                             password: "TViGgDAg"
                         })
-                        const newTime = Math.floor(new Date().getTime() / 1000)
-                        await Vars.update({
-                            status: result.data.status,
-                            date: newTime,
-                            accessToken: result.data.token,
-                        }, {where: {id: 555}}).catch(e => console.log(e))
-
-                        await fsPromises.writeFile("././token.txt", result.data.token);
+                        const obj = JSON.stringify({token: result.data.token, date: timeNow})
+                        await fsPromises.writeFile('../token.js', obj)
                     }
 
-                    const res = await Vars.findOne({where: {id: 555}})
-                    let accessToken = res.dataValues.accessToken
-                    let status = res.dataValues.status
-
                     try {
-                        if (status === 'ok') {
-                            const {data} = await instance.get(url, {
-                                headers: {Authorization: `Bearer ${accessToken}`},
-                                responseType: "arraybuffer"
-                            })
-                            await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
-                            await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
-                                filename: `${chatId}file.pdf`,
-                                contentType: 'application/pdf'
-                            })
-                            await fsPromises.unlink(`./${chatId}file.pdf`)
-                            await ListUsers.increment('checks', {by: 1, where: {chatId: chatId}})
-                        }
-                        if (status === 'error') {
-                            return bot.sendMessage(chatId, 'Ошибка авторизации')
-                        }
+                        const getToken = await fsPromises.readFile('../token.js', 'utf8')
+                        const accessToken = JSON.parse(getToken).token
+                        const {data} = await instance.get(url, {
+                            headers: {Authorization: `Bearer ${accessToken}`},
+                            responseType: "arraybuffer"
+                        })
+                        await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
+                        await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
+                            filename: `${chatId}file.pdf`,
+                            contentType: 'application/pdf'
+                        })
+                        await fsPromises.unlink(`./${chatId}file.pdf`)
+                        await ListUsers.increment('checks', {by: 1, where: {chatId: chatId}})
                     } catch (e) {
                         await bot.sendMessage(chatId, 'Такого VIN номера в базе нет')
                     }
-
                 }
-
 
                 if (match[0] === '001100') {
                     try {
