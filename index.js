@@ -50,7 +50,7 @@ const start = async () => {
             try {
                 if (match[0] === '🆔 id' && await authenticate_users(chatId)) {
                     try {
-                        const user = await ListUsers.findOne({chatId})
+                        const user = await ListUsers.findOne({where: {chatId: chatId}})
                         return bot.sendMessage(chatId, `<b>${user.userName}</b>. Ваш ID: ${user.chatId}`, {parse_mode: 'HTML'})
                     } catch (e) {
                         return bot.sendMessage(chatId, 'Нибумбум')
@@ -99,11 +99,11 @@ const start = async () => {
 
                 if (match[0] === '001100') {
                     try {
-                        await ListUsers.create({chatId, userName})
+                        await ListUsers.create({chatId: chatId, userName: userName})
                         await bot.sendPhoto(chatId, './assets/cover.png')
                         return bot.sendMessage(chatId, 'Теперь у вас есть права доступа', KEYBOARD)
                     } catch (e) {
-                        const user = await ListUsers.findOne({chatId})
+                        const user = await ListUsers.findOne({where: {chatId: chatId}})
                         return user && bot.sendMessage(chatId, 'Вы уже авторизованы', KEYBOARD)
                     }
 
@@ -116,9 +116,8 @@ const start = async () => {
                 }
                 if (Number.isInteger(+msg.text) && +msg.text.length > 6 && await authenticate_users(chatId)) {
                     try {
-                        const user = await ListUsers.findOne({chatId})
                         ListUsers.destroy({
-                            where: {chatId: user.chatId}
+                            where: {chatId: +msg.text}
                         }).then(res => {
                             return bot.sendMessage(chatId, `Пользователь удален`)
                         })
@@ -159,7 +158,7 @@ const start = async () => {
 
 }
 const authenticate_users = async (id) => {
-    const user = await ListUsers.findOne({id})
+    const user = await ListUsers.findOne({where: {chatId: id}})
     return !!user
 }
 
