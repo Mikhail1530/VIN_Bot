@@ -60,26 +60,15 @@ const start = async () => {
                     await bot.sendMessage(chatId, 'Введите <b>VIN</b> авто (17 символов)', {parse_mode: 'HTML'})
                 }
 
-
-                if (match[0] === 'drop' && await authenticate_users(chatId)) {
-                    await ListUsers.drop()
-                }
-                if (match[0] === 'find' && await authenticate_users(chatId)) {
-                    const res = await ListUsers.findAll()
-                    console.log(res)
-                }
-
-
                 if (match[0].length === 17 && await authenticate_users(chatId)) {
                     await bot.sendMessage(chatId, 'Запрос займет немного времени, ожидайте')
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
 
-                    // const objTokenDate = await fsPromises.readFile('../token.js', 'utf8')
-                    // const time = JSON.parse(objTokenDate).date
+                    const objTokenDate = await fsPromises.readFile('../token.js', 'utf8')
+                    const time = JSON.parse(objTokenDate).date
                     let timeNow = Math.floor(new Date().getTime() / 1000)
 
-                    // if ((timeNow - time) > 7140) {
-                    if (timeNow) {
+                    if ((timeNow - time) > 7140) {
                         const result = await instance.post('login', {
                             email: "autopodberu1+1@gmail.com",
                             password: "TViGgDAg"
@@ -88,23 +77,23 @@ const start = async () => {
                         await fsPromises.writeFile('../token.js', obj)
                     }
 
-                    // try {
-                    //     const getToken = await fsPromises.readFile('../token.js', 'utf8')
-                    //     const accessToken = JSON.parse(getToken).token
-                    //     const {data} = await instance.get(url, {
-                    //         headers: {Authorization: `Bearer ${accessToken}`},
-                    //         responseType: "arraybuffer"
-                    //     })
-                    //     await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
-                    //     await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
-                    //         filename: `${chatId}file.pdf`,
-                    //         contentType: 'application/pdf'
-                    //     })
-                    //     await fsPromises.unlink(`./${chatId}file.pdf`)
-                    //     await ListUsers.increment('checks', {by: 1, where: {chatId: chatId}})
-                    // } catch (e) {
-                    //     await bot.sendMessage(chatId, 'Такого VIN номера в базе нет')
-                    // }
+                    try {
+                        const getToken = await fsPromises.readFile('../token.js', 'utf8')
+                        const accessToken = JSON.parse(getToken).token
+                        const {data} = await instance.get(url, {
+                            headers: {Authorization: `Bearer ${accessToken}`},
+                            responseType: "arraybuffer"
+                        })
+                        await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
+                        await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
+                            filename: `${chatId}file.pdf`,
+                            contentType: 'application/pdf'
+                        })
+                        await fsPromises.unlink(`./${chatId}file.pdf`)
+                        await ListUsers.increment('checks', {by: 1, where: {chatId: chatId}})
+                    } catch (e) {
+                        await bot.sendMessage(chatId, 'Такого VIN номера в базе нет')
+                    }
                 }
 
                 if (match[0] === '001100') {
