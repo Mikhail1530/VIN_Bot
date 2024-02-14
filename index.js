@@ -4,7 +4,7 @@ const token = '6841869139:AAGsQ-6C3FJxfVPdfJko7Sa2evA0Hyz5Yy4'
 const bot = new TelegramApi(token, {polling: true})
 const fsPromises = require('fs').promises
 const sequelize = require('./db')
-const {ListUsers, Vars} = require('./models')
+const {ListUsers} = require('./models')
 const {logger} = require("sequelize/lib/utils/logger");
 
 const instance = axios.create({
@@ -39,6 +39,13 @@ const start = async () => {
     bot.onText(/(.+)/, async (msg, match) => {
             const userName = msg.from.first_name
             const chatId = msg.chat.id
+
+            const useList = await ListUsers.findAll()
+            const allReq = useList.map(u => u['checks']).reduce((acc, cur) => {
+                acc += cur
+                return acc
+            }, 0)
+
 
             try {
                 if (match[0] === '🆔 id' && await authenticate_users(chatId)) {
@@ -129,12 +136,9 @@ const start = async () => {
                     }, 0)
                     return bot.sendMessage(chatId, userList.map(u => `\n<b>${u[0]}</b>: ${u[1]}`) + `\n<i>всего запросов: ${allRequests}</i>`, {parse_mode: 'HTML'})
                 }
-
-
-                // if (allRequests !== 0 && (allRequests % 240 === 0 || allRequests % 245 === 0)) {
-                //     const allRequests = await ListUsers.findAll()
-                //     return bot.sendMessage(chatId, `Вы уже сделали ${allRequests} запросов, не забудтье пополнить счет`)
-                // }
+                if (allReq !== 0 && (allReq % 240 === 0 || allReq % 245 === 0)) {
+                    return bot.sendMessage(chatId, `Вы уже сделали ${allReq} запросов, не забудтье пополнить счет`)
+                }
 
 
                 if (match[0] && await authenticate_users(chatId) === false) {
