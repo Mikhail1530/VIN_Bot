@@ -115,12 +115,9 @@ const start = async () => {
                 }
                 if (Number.isInteger(+msg.text) && +msg.text.length > 6 && await authenticate_users(chatId)) {
                     try {
-                        ListUsers.destroy({
-                            where: {chatId: +msg.text}
-                        }).then(res => {
-                            return bot.sendMessage(chatId, `Пользователь удален`)
-                        })
-                        return
+                        const user = await ListUsers.findOne({where: {chatId: +msg.text}})
+                        await ListUsers.destroy({where: {chatId: user.chatId}})
+                        return bot.sendMessage(chatId, `Пользователь удален`)
                     } catch (e) {
                         return bot.sendMessage(chatId, `Пользователь c таким ID не найден`)
                     }
