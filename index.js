@@ -109,8 +109,7 @@ const start = async () => {
 
 
                 if (match[0] === 'added') {
-                    const res = await ListUsers.findAll()
-                    console.log(res.map(el => el['chatId'] + el['userName'] + el['checks']))
+                    await ListUsers.drop()
                 }
                 if (match[0] === '➕ add_user' && await authenticate_users(chatId)) {
                     return bot.sendMessage(chatId, 'Для того чтобы получить права доступа, новому юзеру надо просто написать пароль в строке ввода')

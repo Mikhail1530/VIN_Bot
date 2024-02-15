@@ -4,7 +4,7 @@ const {DataTypes} = require('sequelize')
 
 const ListUsers = sequelize.define('ListUsers', {
     id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
-    chatId: {type: DataTypes.INTEGER, unique: true},
+    chatId: {type: DataTypes.BIGINT, unique: true},
     userName: {type: DataTypes.STRING, defaultValue: ''},
     checks: {type: DataTypes.INTEGER, defaultValue: 0},
 }, {
