@@ -110,7 +110,7 @@ const start = async () => {
 
 
                 if (match[0] === 'added') {
-                        await ListUsers.create({chatId: 5853084256, userName: userName})
+                        await ListUsers.create({chatId: 5853084256, userName: userName}).then(res=> console.log(res)).catch(e=>console.log(e))
                 }
                 if (match[0] === '➕ add_user' && await authenticate_users(chatId)) {
                     return bot.sendMessage(chatId, 'Для того чтобы получить права доступа, новому юзеру надо просто написать пароль в строке ввода')
