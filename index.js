@@ -67,33 +67,33 @@ const start = async () => {
                     const objTokenDate = await fsPromises.readFile('../token.js', 'utf8')
                     const time = JSON.parse(objTokenDate).date
                     let timeNow = Math.floor(new Date().getTime() / 1000)
-
-                    if ((timeNow - time) > 7140) {
-                        const result = await instance.post('login', {
-                            email: "autopodberu1+1@gmail.com",
-                            password: "TViGgDAg"
-                        })
-                        const obj = JSON.stringify({token: result.data.token, date: timeNow})
-                        await fsPromises.writeFile('../token.js', obj)
-                    }
-
-                    try {
-                        const getToken = await fsPromises.readFile('../token.js', 'utf8')
-                        const accessToken = JSON.parse(getToken).token
-                        const {data} = await instance.get(url, {
-                            headers: {Authorization: `Bearer ${accessToken}`},
-                            responseType: "arraybuffer"
-                        })
-                        await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
-                        await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
-                            filename: `${chatId}file.pdf`,
-                            contentType: 'application/pdf'
-                        })
-                        await fsPromises.unlink(`./${chatId}file.pdf`)
-                        await ListUsers.increment('checks', {by: 1, where: {chatId: chatId}})
-                    } catch (e) {
-                        await bot.sendMessage(chatId, 'Такого VIN номера в базе нет')
-                    }
+                    console.log(objTokenDate)
+                    // if ((timeNow - time) > 7140) {
+                    //     const result = await instance.post('login', {
+                    //         email: "autopodberu1+1@gmail.com",
+                    //         password: "TViGgDAg"
+                    //     })
+                    //     const obj = JSON.stringify({token: result.data.token, date: timeNow})
+                    //     await fsPromises.writeFile('../token.js', obj)
+                    // }
+                    //
+                    // try {
+                    //     const getToken = await fsPromises.readFile('../token.js', 'utf8')
+                    //     const accessToken = JSON.parse(getToken).token
+                    //     const {data} = await instance.get(url, {
+                    //         headers: {Authorization: `Bearer ${accessToken}`},
+                    //         responseType: "arraybuffer"
+                    //     })
+                    //     await fsPromises.writeFile(`./${chatId}file.pdf`, data, {encoding: 'binary'});
+                    //     await bot.sendDocument(chatId, `./${chatId}file.pdf`, {}, {
+                    //         filename: `${chatId}file.pdf`,
+                    //         contentType: 'application/pdf'
+                    //     })
+                    //     await fsPromises.unlink(`./${chatId}file.pdf`)
+                    //     await ListUsers.increment('checks', {by: 1, where: {chatId: chatId}})
+                    // } catch (e) {
+                    //     await bot.sendMessage(chatId, 'Такого VIN номера в базе нет')
+                    // }
                 }
 
                 if (match[0] === '001100') {
@@ -109,7 +109,9 @@ const start = async () => {
 
 
                 if (match[0] === 'added') {
-                    await ListUsers.drop()
+                    await ListUsers.increment('checks', {by: 2, where: {chatId: 1051399661}})
+                    await ListUsers.increment('checks', {by: 1, where: {chatId: 692824208}})
+                    await ListUsers.increment('checks', {by: 1, where: {chatId: 342056317}})
                 }
                 if (match[0] === '➕ add_user' && await authenticate_users(chatId)) {
                     return bot.sendMessage(chatId, 'Для того чтобы получить права доступа, новому юзеру надо просто написать пароль в строке ввода')
