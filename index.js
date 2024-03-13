@@ -64,17 +64,17 @@ const start = async () => {
                     await bot.sendMessage(chatId, 'Запрос займет немного времени, ожидайте')
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
 
-                    // const objTokenDate = await fsPromises.readFile('../token.js', 'utf8')
-                    // const time = JSON.parse(objTokenDate).date
+                    const objTokenDate = await fsPromises.readFile('../token.js', 'utf8')
+                    const time = JSON.parse(objTokenDate).date
                     let timeNow = Math.floor(new Date().getTime() / 1000)
-                    // if ((timeNow - time) > 7140) {
+                    if ((timeNow - time) > 7140) {
                         const result = await instance.post('login', {
                             email: "autopodberu1+1@gmail.com",
                             password: "TViGgDAg"
                         })
                         const obj = JSON.stringify({token: result.data.token, date: timeNow})
                         await fsPromises.writeFile('../token.js', obj)
-                    // }
+                    }
 
                     try {
                         const getToken = await fsPromises.readFile('../token.js', 'utf8')
