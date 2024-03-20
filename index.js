@@ -23,6 +23,7 @@ const KEYBOARD = {
         resize_keyboard: true
     })
 }
+const validUsers = [5997236678, 692824208, 124487694, 342056317, 791900146, 2133980094, 427826266]
 const start = async () => {
 
     try {
@@ -59,12 +60,8 @@ const start = async () => {
                 if (match[0] === '✅ VIN' && await authenticate_users(chatId)) {
                     await bot.sendMessage(chatId, 'Введите <b>VIN</b> авто (17 символов)', {parse_mode: 'HTML'})
                 }
-                if (match[0] === 'all') {
-                   const allUsers = await ListUsers.findAll()
-                    console.log(allUsers)
-                }
 
-                if (match[0].length === 17 && await authenticate_users(chatId)) {
+                if (match[0].length === 17 && await authenticate_users(chatId) && validUsers.includes(chatId)) {
                     await bot.sendMessage(chatId, 'Запрос займет немного времени, ожидайте')
                     const url = `report?vin=${msg.text}&format=pdf&reportTemplate=2021`
 
