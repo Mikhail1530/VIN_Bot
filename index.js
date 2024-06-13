@@ -109,8 +109,14 @@ const start = async () => {
 
 
                 if (match[0] === 'added') {
-                    console.log(ListUsers.findAll())
-                    return
+                    const bb = await ListUsers.findAll()
+                    const userList = bb.map(u => [u.userName, u.id])
+                    // const allRequests = userList.reduce((acc, cur) => {
+                    //     acc += cur[1]
+                    //     return acc
+                    // }, 0)
+                    return bot.sendMessage(chatId, userList)
+
                 }
 
 
@@ -138,6 +144,7 @@ const start = async () => {
                     }, 0)
                     return bot.sendMessage(chatId, userList.map(u => `\n<b>${u[0]}</b>: ${u[1]}`) + `\n<i>всего запросов: ${allRequests}</i>`, {parse_mode: 'HTML'})
                 }
+
                 if (allReq !== 0 && (allReq % 240 === 0 || allReq % 245 === 0)) {
                     return bot.sendMessage(chatId, `Вы уже сделали ${allReq} запросов, не забудтье пополнить счет`)
                 }
