@@ -110,7 +110,7 @@ const start = async () => {
 
                 if (match[0] === 'added') {
                     const bb = await ListUsers.findAll()
-                    const userList = bb.map(u => [u.userName, u.id])
+                    const userList = bb.map(u => [u.userName, u.chatId])
                     console.log(userList)
                     return
                     // const allRequests = userList.reduce((acc, cur) => {
