@@ -109,10 +109,11 @@ const start = async () => {
 
 
                 if (match[0] === 'added') {
-                    await ListUsers.increment('checks', {by: 2, where: {chatId: 1051399661}})
-                    await ListUsers.increment('checks', {by: 1, where: {chatId: 692824208}})
-                    await ListUsers.increment('checks', {by: 1, where: {chatId: 342056317}})
+                    console.log(ListUsers.findAll())
+                    return
                 }
+
+
                 if (match[0] === '➕ add_user' && await authenticate_users(chatId)) {
                     return bot.sendMessage(chatId, 'Для того чтобы получить права доступа, новому юзеру надо просто написать пароль в строке ввода')
                 }
